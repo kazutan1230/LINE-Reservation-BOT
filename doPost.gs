@@ -9,18 +9,25 @@ const sheet = SS.getSheetByName('2023/10_LINE');
 function doPost(e) {
   const data = e.postData.getDataAsString();
   const req = JSON.parse(data);
-  const queryText = req.queryResult.queryText;
 
-  const queryParameters = req.queryResult["outputContexts"].find(output => output.name.includes("reservation-followup")).parameters;
-  const PrivacyPolicy = queryParameters.PrivacyPolicy;
-  const EventCondition = queryParameters.EventCondition;
-  const ChildCount = queryParameters.ChildCount;
-  const ChildName = queryParameters.ChildName;
-  const ChildGrade = queryParameters.ChildGrade;
-  const ParentName = queryParameters.ParentName;
-  const Mail = queryParameters.Mail;
-  const NextEvent = queryParameters.NextEvent;
-  const Other = queryParameters.Other;
+
+  // reqの中身から
+  // 抽選応募受付(reservation-followup)か
+  // 次回開催お知らせ希望(nexteventalert-followup)かを判断
+  const outputs = req.queryResult.outputContexts;
+
+  // 抽選応募受付(reservation-followup)の時
+  if(outputs.find(output => output.name.includes("reservation-followup")) != undefined){
+    const queryParameters = req.queryResult["outputContexts"].find(output => output.name.includes("reservation-followup")).parameters;
+    const PrivacyPolicy = queryParameters.PrivacyPolicy;
+    const EventCondition = queryParameters.EventCondition;
+    const ChildCount = queryParameters.ChildCount;
+    const ChildName = queryParameters.ChildName;
+    const ChildGrade = queryParameters.ChildGrade;
+    const ParentName = queryParameters.ParentName;
+    const Mail = queryParameters.Mail;
+    const NextEvent = queryParameters.NextEvent;
+    const Other = queryParameters.Other;
 
 // スプレッドシートに吐き出す
   sheet.appendRow([
@@ -35,33 +42,33 @@ function doPost(e) {
     NextEvent,
     Other
   ])
+  // 次回開催お知らせ希望(nexteventalert-followup)の時
+  } else if (outputs.find(output => output.name.includes("nexteventalert-followup")) != undefined){
+    const queryParameters = req.queryResult["outputContexts"].find(output => output.name.includes("nexteventalert-followup")).parameters;
+    const PrivacyPolicy = queryParameters.PrivacyPolicy;
+    const AlertParentName = queryParameters.AlertParentName;
+    const AlertMail = queryParameters.AlertMail;
+    const NextEvent = "希望する";
 
-// Dialogflowに返却するresponse
-  // const res = {
-  //   "fulfillmentMessages": [
-  //     {
-  //       "text": {
-  //         "text": [
-  //           ChildName +
-  //           ChildFurigana +
-  //           Age +
-  //           ParentName +
-  //           ParentFurigana +
-  //           Address +
-  //           TEL +
-  //           Mail +
-  //           Subscribe +
-  //           Other
-  //         ]
-  //       }
-  //     }
-  //   ],
-  // };
+// スプレッドシートに吐き出す
+  sheet.appendRow([
+    "",
+    PrivacyPolicy,
+    "",
+    "",
+    "",
+    "",
+    AlertParentName,
+    AlertMail,
+    NextEvent,
+    ""
+  ])
+  } else{
+  }
 
   const res = {
     
   }
-
 
   return ContentService.createTextOutput(JSON.stringify(res));
 }
