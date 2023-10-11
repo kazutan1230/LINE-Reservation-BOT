@@ -1,7 +1,8 @@
 // Googleスプレッドシート
 const SS_ID = "1qCc-YpncZa8SsN73YslmLem0Tyb0mymIli-iNqenMb4";
 const SS = SpreadsheetApp.openById(SS_ID);
-const sheet = SS.getSheetByName('2023/10_LINE');
+const sheetLine = SS.getSheetByName('2023/10_LINE');
+const sheetAlert = SS.getSheetByName('2023/10_LINE_次回開催お知らせ希望');
 
 /**
  * POSTメソッド
@@ -30,7 +31,7 @@ function doPost(e) {
     const Other = queryParameters.Other;
 
 // スプレッドシートに吐き出す
-  sheet.appendRow([
+  sheetLine.appendRow([
     "",
     PrivacyPolicy,
     EventCondition,
@@ -51,17 +52,12 @@ function doPost(e) {
     const NextEvent = "希望する";
 
 // スプレッドシートに吐き出す
-  sheet.appendRow([
+  sheetAlert.appendRow([
     "",
     PrivacyPolicy,
-    "",
-    "",
-    "",
-    "",
     AlertParentName,
     AlertMail,
-    NextEvent,
-    ""
+    NextEvent
   ])
   } else{
   }
