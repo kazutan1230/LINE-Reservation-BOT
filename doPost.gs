@@ -78,8 +78,22 @@ function doPost(e) {
     // 未読防止の LINE への通知設定
     const url = "https://maker.ifttt.com/trigger/contact_informed/with/key/ozfbzp7HX3YbcOgtN66O7M85hwQKxAus3V5l3VfVLRb"
 
+
+    const yyyymmdd = new Intl.DateTimeFormat(
+      "ja-JA",
+      {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      }
+    )
+
     const data = {
-      "value1": req.queryResult.queryText,
+      "value1": yyyymmdd.format(date),
+      "value2": inquiry,
     }
     const headers = {
       "Content-Type": "application/json"
